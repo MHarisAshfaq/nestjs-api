@@ -13,15 +13,22 @@ import { JwtGuard } from 'src/auth/guard';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto, EditBookmarkDto } from './dto';
 import { GetUser } from 'src/user/decorators';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
 @Controller('bookmarks')
 @ApiTags('bookmarks')
+@ApiBearerAuth()
 export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) {}
 
   @Post()
+  @ApiCreatedResponse()
   createBookmark(
     @GetUser('id') userId: number,
     @Body() dto: CreateBookmarkDto,
@@ -30,11 +37,13 @@ export class BookmarkController {
   }
 
   @Get()
+  @ApiOkResponse({ isArray: true })
   getBookmarks(@GetUser('id') userId: number) {
     return this.bookmarkService.getBookmarks(userId);
   }
 
   @Get(':id')
+  @ApiOkResponse()
   getBookmark(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
@@ -43,6 +52,7 @@ export class BookmarkController {
   }
 
   @Patch(':id')
+  @ApiOkResponse()
   updateBookmark(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,
@@ -52,6 +62,7 @@ export class BookmarkController {
   }
 
   @Delete(':id')
+  @ApiOkResponse()
   deleteBookmark(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) bookmarkId: number,

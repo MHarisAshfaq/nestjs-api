@@ -9,11 +9,6 @@ export class EditUserDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
-  password: string;
-
-  @ApiProperty()
-  @IsString()
   @IsOptional()
   firstName: string;
 
