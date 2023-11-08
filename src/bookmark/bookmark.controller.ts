@@ -12,7 +12,7 @@ import {
 import { JwtGuard } from 'src/auth/guard';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto, EditBookmarkDto } from './dto';
-import { GetUser } from 'src/user/decorators';
+import { GetUser } from 'src/common/decorator';
 import {
   ApiBearerAuth,
   ApiOkResponse,

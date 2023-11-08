@@ -46,7 +46,7 @@ export class BookmarkService {
       },
     });
     if (!bookmark) {
-      throw new NotFoundException('Bookmark not found');
+      throw new NotFoundException(['Bookmark not found']);
     }
     return this.prismaService.bookmark.update({
       where: {
@@ -67,7 +67,7 @@ export class BookmarkService {
       },
     });
     if (!bookmark) {
-      throw new NotFoundException('Bookmark not found');
+      throw new NotFoundException(['Bookmark not found']);
     }
     return this.prismaService.bookmark.delete({
       where: {

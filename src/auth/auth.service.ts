@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LoginDto, SignUpDto } from './dto';
+import { AuthLoginDTO, AuthLoginResponseDTO, AuthRegisterDTO } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { User } from '@prisma/client';
@@ -14,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
-  async register(dto: SignUpDto) {
+  async register(dto: AuthRegisterDTO) {
     try {
       const { password } = dto;
       const hashedPassword = await argon.hash(password);
@@ -37,7 +37,7 @@ export class AuthService {
       throw error;
     }
   }
-  async login(dto: LoginDto) {
+  async login(dto: AuthLoginDTO): Promise<AuthLoginResponseDTO> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -45,11 +45,11 @@ export class AuthService {
         },
       });
       if (!user) {
-        throw new ForbiddenException('Wrong credentials');
+        throw new ForbiddenException(['Wrong credentials']);
       }
       const isPasswordValid = await argon.verify(user.hash, dto.password);
       if (!isPasswordValid) {
-        throw new ForbiddenException('Wrong credentials');
+        throw new ForbiddenException(['Wrong credentials']);
       }
       const { hash, ...userWithoutHash } = user;
       return {
